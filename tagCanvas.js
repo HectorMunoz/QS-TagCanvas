@@ -10,12 +10,49 @@ function ( qlik , tagCanvas) {
 			export: true,
 			exportData : false
 		},
-		paint: function ($element, $layout) {
+		initialProperties: {
+			qHyperCubeDef: {
+				qDimensions: [],
+				qMeasures: [],
+				qInitialDataFetch: [
+					{
+						qWidth: 2,			//col limit
+						qHeight: 1000		//row limit
+					}
+				]
+			}
+		},
+		definition: {
+			type: "items",
+			component: "accordion",
+			items: {
+				dimensions: {
+					uses: "dimensions",
+					min: 1,
+					max: 1
+				},
+				sorting: {
+					uses: "sorting"
+				},
+				appearance: {
+					uses: "settings",
+				}
+			}
+		},		
+		paint: function ($element, layout) {
+
+			var hc = layout.qHyperCube;
+			
 			//add your rendering code here
 			html  = "<canvas height='500' id='myCanvas' width='500'></canvas>";
 			html += "<div class='myCanvasContainer'>";
 			html += "<div id='tags'>";
-			html += "<ul><li><a>1</a></li><li><a>2</a></li><li><a>3</a></li><li><a>4</a></li><li><a>5</a></li><li><a>6</a></li><li><a>7</a></li><li><a>8</a></li><li><a>9</a></li><li><a>10</a></li></ul>";
+			html += "<ul hidden>";
+			
+			for (var r = 0; r < hc.qDataPages[0].qMatrix.length; r++) {
+				html += "<li><a href='#' >" + hc.qDataPages[0].qMatrix[r][0].qText + "</a></li>" + "\n"; 
+			}
+			
 			html += "</div></div>";
 			$element.html( html );
 			
